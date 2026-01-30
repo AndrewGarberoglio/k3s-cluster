@@ -13,14 +13,23 @@ spec:
       labels:
         app: linkding
     spec:
+      securityContext:
+        fsGroup: 33
+        runAsUser: 33
+        runAsGroup: 33
+    spec:
       containers:
         - name: linkding
           image: sissbruecker/linkding:1.45.0
           ports:
             - containerPort: 9090
+
+          securityContext:
+            allowPrivilegeEscalation: false
+
           volumeMounts:
-            - mountPath: /app/data
-              name: linkding-data
+            - mountPath: /etc/linkding/data
+              name: linkding-data-pvc
       volumes:
         - name: linkding-data
           persistentVolumeClaim:
