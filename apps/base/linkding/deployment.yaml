@@ -18,3 +18,10 @@ spec:
           image: sissbruecker/linkding:1.45.0
           ports:
             - containerPort: 9090
+          volumeMounts:
+            - mountPath: /app/data
+              name: linkding-data
+      volumes:
+        - name: linkding-data
+          persistentVolumeClaim:
+            claimName: linkding-data
