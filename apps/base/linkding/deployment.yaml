@@ -16,7 +16,6 @@ spec:
       securityContext:
         fsGroup: 33
         fsGroupChangePolicy: "Always"
-        runAsNonRoot: true
         supplementalGroups: [33]
       
       initContainers:
@@ -44,6 +43,7 @@ spec:
         securityContext:
           runAsUser: 33
           runAsGroup: 33
+          runAsNonRoot: true
           allowPrivilegeEscalation: false
           capabilities:
             drop: ["ALL"]
