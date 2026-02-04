@@ -19,10 +19,6 @@ spec:
         runAsNonRoot: true
         supplementalGroups: [33]
       
-        volumeMounts:
-        - name: linkding-data
-          mountPath: /etc/linkding/data
-
       initContainers:
       - name: volume-permissions
         image: busybox:1.36
@@ -39,24 +35,30 @@ spec:
         volumeMounts:
         - name: linkding-data
           mountPath: /data
-        
+      
       containers:
-        - name: linkding
-          image: sissbruecker/linkding:1.45.0
-          ports:
-            - containerPort: 9090
-          securityContext:
-            runAsUser: 33
-            runAsGroup: 33
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop: ["ALL"]
-          env:
-            - name: LD_HUEY_DISABLED
-              value: "1"
-            - name: LD_CSRF_TRUSTED_ORIGINS
-              value: "http://192.168.2.*,http://k8sld.garberogl.io"
-         startupProbe:
+      - name: linkding
+        image: sissbruecker/linkding:1.45.0
+        ports:
+        - containerPort: 9090
+        securityContext:
+          runAsUser: 33
+          runAsGroup: 33
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: LD_HUEY_DISABLED
+          value: "1"
+        - name: LD_CSRF_TRUSTED_ORIGINS
+          value: "http://192.168.2.*,http://k8sld.garberogl.io"
+        envFrom:
+        - secretRef:
+            name: linkding-container-env
+        volumeMounts:
+        - name: linkding-data
+          mountPath: /etc/linkding/data
+        startupProbe:
           httpGet:
             path: /
             port: 9090
@@ -64,20 +66,18 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 24
-
-      envFrom:
-        #- configMapRef:
-        #  name: linkding-configmap
-        - secretRef:
-          name: linkding-container-env
-
-          securityContext:
-            allowPrivilegeEscalation: false
-
-          volumeMounts:
-            - mountPath: /etc/linkding/data
-              name: linkding-data
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9090
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9090
+          periodSeconds: 5
+      
       volumes:
-        - name: linkding-data
-          persistentVolumeClaim:
-            claimName: linkding-data-pvc
+      - name: linkding-data
+        persistentVolumeClaim:
+          claimName: linkding-data-pvc
