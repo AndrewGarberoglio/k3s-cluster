@@ -36,6 +36,12 @@ spec:
           image: sissbruecker/linkding:1.45.0
           ports:
             - containerPort: 9090
+          securityContext:
+            runAsUser: 33
+            runAsGroup: 33
+          env:
+            - name: LD_CSRF_TRUSTED_ORIGINS
+              value: "http://192.168.2.*,http://k8sld.garberogl.io"
 
       envFrom:
         #- configMapRef:
