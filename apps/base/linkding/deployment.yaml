@@ -29,7 +29,7 @@ spec:
           sync
         volumeMounts:
         - name: linkding-data
-          mountPath: /data
+          mountPath: /etc/linkding/data
         
       containers:
         - name: linkding
