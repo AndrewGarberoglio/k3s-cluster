@@ -49,9 +49,22 @@ spec:
           securityContext:
             runAsUser: 33
             runAsGroup: 33
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           env:
+            - name: LD_HUEY_DISABLED
+              value: "1"
             - name: LD_CSRF_TRUSTED_ORIGINS
               value: "http://192.168.2.*,http://k8sld.garberogl.io"
+         startupProbe:
+          httpGet:
+            path: /
+            port: 9090
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 24
 
       envFrom:
         #- configMapRef:
