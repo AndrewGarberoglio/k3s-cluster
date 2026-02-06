@@ -33,3 +33,14 @@ spec:
         existingSecret: grafana-admin  
         userKey: admin-user
         passwordKey: admin-password
+      ingress:
+        enabled: true
+        ingressClassName: traefik
+
+        hosts:
+          - grs.garberogl.io
+
+        tls:
+          - secretName: grafana-tls-secret
+            hosts:
+              - grs.garberogl.io
