@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - helmrepositories/helmrepository-ingress-nginx.yaml
   - kustomizations/kustomization-ingress-nginx-grafana.yaml
-  - ./ingress-nginx-grafana
