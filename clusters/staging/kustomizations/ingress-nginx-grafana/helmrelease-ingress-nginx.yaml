@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: ingress-nginx
-      version: "4.11.x"  # Latest stable as of 2026
+      version: "4.11.x"
       sourceRef:
         kind: HelmRepository
         name: ingress-nginx
@@ -20,16 +20,9 @@ spec:
     controller:
       service:
         type: LoadBalancer
-        loadBalancerIP: 192.168.2.240  
-        annotations:
-          metallb.universe.tf/address-pool: default-pool
+        loadBalancerIP: 192.168.2.240
       ingressClassResource:
         name: nginx
         default: false
-      metrics:
-        enabled: true
       admissionWebhooks:
-        enabled: false  # Avoid webhook issues in homelab
-    # Disable unnecessary resources
-    autoscaling:
-      enabled: false
+        enabled: false
