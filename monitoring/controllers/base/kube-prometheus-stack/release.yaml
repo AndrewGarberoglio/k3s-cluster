@@ -9,8 +9,6 @@ spec:
     spec:
       chart: kube-prometheus-stack
       version: "81.5.0"
-
-
       sourceRef:
         kind: HelmRepository
         name: kube-prometheus-stack
@@ -23,28 +21,21 @@ spec:
   driftDetection:
     mode: enabled
     ignore:
-      # Ignore "validated" annotation which is not inserted during install
       - paths: ["/metadata/annotations/prometheus-operator-validated"]
         target:
           kind: PrometheusRule
   values:
     grafana:
       admin:
-        existingSecret: grafana-admin  
+        existingSecret: grafana-admin
         userKey: admin-user
         passwordKey: admin-password
       ingress:
         enabled: true
-        ingressClassName: traefik
-
+        ingressClassName: nginx  
         hosts:
           - grs.garberogl.io
-
         tls:
           - secretName: grafana-tls-secret
             hosts:
               - grs.garberogl.io
-
-        service:
-          type: LoadBalancer
-          loadBalancerIP: 192.168.2.100 

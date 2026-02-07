@@ -1,0 +1,35 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: ingress-nginx
+      version: "4.11.x"  # Latest stable as of 2026
+      sourceRef:
+        kind: HelmRepository
+        name: ingress-nginx
+        namespace: flux-system
+      interval: 12h
+  install:
+    createNamespace: true
+  values:
+    controller:
+      service:
+        type: LoadBalancer
+        loadBalancerIP: 192.168.2.240  
+        annotations:
+          metallb.universe.tf/address-pool: default-pool
+      ingressClassResource:
+        name: nginx
+        default: false
+      metrics:
+        enabled: true
+      admissionWebhooks:
+        enabled: false  # Avoid webhook issues in homelab
+    # Disable unnecessary resources
+    autoscaling:
+      enabled: false
